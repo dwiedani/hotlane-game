@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "tsc --build",
+    "build": "tsc --build ./Script/Source/tsconfig.json",
     "clean": "tsc --build --clean"
   },
   "dependencies": {
