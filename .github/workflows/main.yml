@@ -13,7 +13,7 @@ jobs:
       run: |
         npm install
       env:
-      HOTLANE_SERVICE_TOKEN: ${{ secrets.HOTLANE_SERVICE_TOKEN }}
+      REACT_APP_APIKey: ${{ secrets.HOTLANE_SERVICE_TOKEN }}
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4.2.2
       with:
