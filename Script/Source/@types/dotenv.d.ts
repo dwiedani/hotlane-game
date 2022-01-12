@@ -14,7 +14,7 @@
     interface DotenvParseOutput {
       [name: string]: string;
     }
-    
+
   }
 
   declare namespace Dotenv {
