@@ -196,6 +196,7 @@ var Script;
         static controller;
         static instance;
         score;
+        hundreds;
         startTime;
         constructor() {
             super();
@@ -204,6 +205,7 @@ var Script;
             GameState.controller = new fui.Controller(this, domHud);
             console.log("Hud-Controller", GameState.controller);
             this.startTime = Date.now();
+            this.hundreds = 0;
             this.score = 0;
         }
         static get() {
@@ -374,13 +376,16 @@ var Script;
             this.roadLength = this.node.getComponent(f.ComponentMesh).mtxPivot.scaling.z;
             this.transform = this.node.getComponent(f.ComponentTransform).mtxLocal;
             this.startPosition = new f.Vector3(this.transform.translation.x, this.transform.translation.y, -this.roadLength);
-            this.maxSpeed = 150;
+            this.maxSpeed = 125;
             f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
         };
         update = (_event) => {
             // ISSUE: Roads start to seperate when using frameTime
             let speed = this.speedInc * (f.Loop.timeFrameReal / 1000);
-            this.speedInc += this.speedInc <= this.maxSpeed ? 0.01 : 0;
+            this.speedInc += this.speedInc <= this.maxSpeed ? 0.03 : 0;
+            if (this.transform.translation.z >= 0) {
+                Script.GameState.get().score = Script.GameState.get().hundreds + Math.floor(this.transform.translation.z);
+            }
             this.reset();
             this.transform.translateZ(speed);
         };
@@ -403,7 +408,8 @@ var Script;
                 this.node.getChildrenByName("Obstacle").forEach((obstacle) => {
                     this.node.removeChild(obstacle);
                 });
-                Script.GameState.get().score += 1;
+                Script.GameState.get().hundreds += this.roadLength;
+                console.log(Script.GameState.get().score);
                 this.spawnObstacle();
             }
         }
@@ -429,7 +435,6 @@ var Script;
 var Script;
 (function (Script) {
     var f = FudgeCore;
-    var dotenv = Dotenv;
     class Scoreboard extends f.Mutable {
         static instance;
         scoreboard;
@@ -437,9 +442,7 @@ var Script;
         constructor() {
             super();
             Scoreboard.instance = this;
-            dotenv.config();
             this.domHud = document.querySelector("#ui-scoreboard__inner");
-            console.log("token", process.env.HOTLANE_SERVICE_TOKEN);
         }
         static get() {
             return Scoreboard.instance || new Scoreboard();
@@ -468,7 +471,7 @@ var Script;
         }
         async postScore(name, score) {
             return new Promise(resolve => {
-                fetch('https://hotlane-scoreboard.herokuapp.com/score?TOKEN=' + process.env.HOTLANE_SERVICE_TOKEN, {
+                fetch('https://hotlane-scoreboard.herokuapp.com/score?TOKEN=' + '3t3tg34ff34fwsdfagh', {
                     method: 'POST',
                     body: JSON.stringify({
                         "name": name,

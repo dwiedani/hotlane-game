@@ -1,5 +1,5 @@
 // TypeScript Version: 3.0
-/// <reference types="node" />
+/// <reference types="node"  path="node_modules/dotenv/lib/main.js" />
 
   declare namespace Dotenv{
     interface DotenvParseOptions {
@@ -14,7 +14,6 @@
     interface DotenvParseOutput {
       [name: string]: string;
     }
-
   }
 
   declare namespace Dotenv {

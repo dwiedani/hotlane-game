@@ -6,6 +6,7 @@ namespace Script {
       private static controller: fui.Controller;
       private static instance: GameState;
       public score: number;
+      public hundreds: number;
       public startTime: number;
       
       private constructor() {
@@ -15,6 +16,7 @@ namespace Script {
         GameState.controller = new fui.Controller(this, domHud);
         console.log("Hud-Controller", GameState.controller);
         this.startTime = Date.now();
+        this.hundreds = 0;
         this.score = 0;
       }
   

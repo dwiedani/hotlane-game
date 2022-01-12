@@ -48,6 +48,7 @@ declare namespace Script {
         private static controller;
         private static instance;
         score: number;
+        hundreds: number;
         startTime: number;
         private constructor();
         static get(): GameState;

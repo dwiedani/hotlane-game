@@ -36,14 +36,19 @@ namespace Script {
       this.roadLength = this.node.getComponent(f.ComponentMesh).mtxPivot.scaling.z;
       this.transform = this.node.getComponent(f.ComponentTransform).mtxLocal;
       this.startPosition = new f.Vector3(this.transform.translation.x,this.transform.translation.y,-this.roadLength);
-      this.maxSpeed = 150;
+      this.maxSpeed = 125;
       f.Loop.addEventListener(f.EVENT.LOOP_FRAME, this.update);
     }
 
     public update = (_event: Event): void => {
       // ISSUE: Roads start to seperate when using frameTime
-      let speed: number = this.speedInc * (f.Loop.timeFrameReal / 1000); 
-      this.speedInc += this.speedInc <= this.maxSpeed ? 0.01 : 0;
+      let speed: number = this.speedInc * (f.Loop.timeFrameReal / 1000);
+      this.speedInc += this.speedInc <= this.maxSpeed ? 0.03 : 0;
+
+      if(this.transform.translation.z >= 0){
+        GameState.get().score = GameState.get().hundreds + Math.floor(this.transform.translation.z);
+      }
+
       this.reset();
       this.transform.translateZ(speed);
     }
@@ -69,9 +74,10 @@ namespace Script {
         this.node.getChildrenByName("Obstacle").forEach((obstacle)=>{
           this.node.removeChild(obstacle);
         });
-
-        GameState.get().score += 1;
-
+             
+        GameState.get().hundreds += this.roadLength;
+        console.log(GameState.get().score);
+        
         this.spawnObstacle();
       } 
     }
