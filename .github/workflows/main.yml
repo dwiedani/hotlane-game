@@ -10,10 +10,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Create env file
-        run: |
-          touch .env
-          echo HOTLANE_SERVICE_TOKEN=${{ secrets.HOTLANE_SERVICE_TOKEN }} >> .env
-          cat .env
+      run: |
+        touch .env
+        echo HOTLANE_SERVICE_TOKEN=${{ secrets.HOTLANE_SERVICE_TOKEN }} >> .env
+        cat .env
     - name: Build
       run: |
         npm install
