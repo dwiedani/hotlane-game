@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"
+  },
   "dependencies": {
     "dotenv": "^11.0.0"
   },
