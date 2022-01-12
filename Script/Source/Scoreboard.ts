@@ -1,5 +1,6 @@
 namespace Script {
     import f = FudgeCore;
+    import dotenv = Dotenv;
 
     export class Scoreboard extends f.Mutable {
         private static instance: Scoreboard;
@@ -9,6 +10,7 @@ namespace Script {
         private constructor() {
             super();
             Scoreboard.instance = this;
+            dotenv.config();
             this.domHud = document.querySelector("#ui-scoreboard__inner");
             console.log("token", process.env.HOTLANE_SERVICE_TOKEN);
         }

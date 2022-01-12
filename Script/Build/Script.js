@@ -429,6 +429,7 @@ var Script;
 var Script;
 (function (Script) {
     var f = FudgeCore;
+    var dotenv = Dotenv;
     class Scoreboard extends f.Mutable {
         static instance;
         scoreboard;
@@ -436,6 +437,7 @@ var Script;
         constructor() {
             super();
             Scoreboard.instance = this;
+            dotenv.config();
             this.domHud = document.querySelector("#ui-scoreboard__inner");
             console.log("token", process.env.HOTLANE_SERVICE_TOKEN);
         }
