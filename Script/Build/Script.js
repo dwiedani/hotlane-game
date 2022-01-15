@@ -213,7 +213,7 @@ var Script;
         }
         gameOver() {
             this.pauseLoop();
-            let name = prompt("Game Over: " + this.score + ", Please enter your name", "anonymous");
+            let name = prompt("Game Over at: " + this.score + "m, Please enter your name", "anonymous");
             if (name !== null || name !== "") {
                 Script.Scoreboard.get().postScore(name, this.score).then((newScoreboard) => {
                     console.log(newScoreboard);
@@ -452,7 +452,7 @@ var Script;
             this.scoreboard.forEach((item) => {
                 const li = document.createElement('li');
                 ol.appendChild(li);
-                li.innerHTML += item.name + ": " + item.score;
+                li.innerHTML += item.name + ": " + item.score + "m";
             });
             this.domHud.innerHTML = '';
             this.domHud.append(ol);

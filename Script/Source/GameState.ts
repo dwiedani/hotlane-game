@@ -26,7 +26,7 @@ namespace Script {
 
       public gameOver() {
         this.pauseLoop();
-        let name = prompt("Game Over: " + this.score +", Please enter your name", "anonymous");
+        let name = prompt("Game Over at: " + this.score +"m, Please enter your name", "anonymous");
         if (name !== null || name !== "") {
           Scoreboard.get().postScore(name,this.score).then((newScoreboard)=>{
             console.log(newScoreboard);

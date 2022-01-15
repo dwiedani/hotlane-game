@@ -21,7 +21,7 @@ namespace Script {
             this.scoreboard.forEach((item: any) => {
                 const li = document.createElement('li');
                 ol.appendChild(li);
-                li.innerHTML += item.name + ": " + item.score;
+                li.innerHTML += item.name + ": " + item.score + "m";
             });
             this.domHud.innerHTML = '';
             this.domHud.append(ol);
