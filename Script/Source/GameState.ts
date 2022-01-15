@@ -8,6 +8,7 @@ namespace Script {
       public score: number;
       public hundreds: number;
       public startTime: number;
+      private isGameOver: boolean;
       
       private constructor() {
         super();
@@ -18,6 +19,7 @@ namespace Script {
         this.startTime = Date.now();
         this.hundreds = 0;
         this.score = 0;
+        this.isGameOver = false;
       }
   
       public static get(): GameState {
@@ -25,8 +27,9 @@ namespace Script {
       }
 
       public gameOver() {
+        this.isGameOver = true;
         this.pauseLoop();
-        let name = prompt("Game Over at: " + this.score +"m, Please enter your name", "anonymous");
+          let name = prompt("Game Over at: " + this.score +"m, Please enter your name", "anonymous");
         if (name !== null || name !== "") {
           Scoreboard.get().postScore(name,this.score).then((newScoreboard)=>{
             console.log(newScoreboard);
@@ -39,7 +42,8 @@ namespace Script {
       }
     
       public startLoop(): void {
-        f.Loop.start(f.LOOP_MODE.TIME_REAL, 60);  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+        if(!this.isGameOver)
+          f.Loop.start(f.LOOP_MODE.TIME_REAL, 60);  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
       }
     
       public pauseLoop(): void  {

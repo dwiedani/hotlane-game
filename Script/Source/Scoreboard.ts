@@ -20,8 +20,15 @@ namespace Script {
             const ol = document.createElement('ol');
             this.scoreboard.forEach((item: any) => {
                 const li = document.createElement('li');
+                const name = document.createElement('span');
+                name.classList.add('scoreboard__name');
+                name.innerHTML = '[' + item.name + ']';
+                const score = document.createElement('span');
+                score.classList.add('scoreboard__score');
+                score.innerHTML =  item.score + "m";
+                li.appendChild(name);
+                li.appendChild(score);
                 ol.appendChild(li);
-                li.innerHTML += item.name + ": " + item.score + "m";
             });
             this.domHud.innerHTML = '';
             this.domHud.append(ol);

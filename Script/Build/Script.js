@@ -198,6 +198,7 @@ var Script;
         score;
         hundreds;
         startTime;
+        isGameOver;
         constructor() {
             super();
             let domHud = document.querySelector("#ui");
@@ -207,11 +208,13 @@ var Script;
             this.startTime = Date.now();
             this.hundreds = 0;
             this.score = 0;
+            this.isGameOver = false;
         }
         static get() {
             return GameState.instance || new GameState();
         }
         gameOver() {
+            this.isGameOver = true;
             this.pauseLoop();
             let name = prompt("Game Over at: " + this.score + "m, Please enter your name", "anonymous");
             if (name !== null || name !== "") {
@@ -224,7 +227,8 @@ var Script;
             document.hidden ? GameState.get().pauseLoop() : GameState.get().startLoop();
         }
         startLoop() {
-            f.Loop.start(f.LOOP_MODE.TIME_REAL, 60); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+            if (!this.isGameOver)
+                f.Loop.start(f.LOOP_MODE.TIME_REAL, 60); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         }
         pauseLoop() {
             f.Loop.stop();
@@ -451,8 +455,15 @@ var Script;
             const ol = document.createElement('ol');
             this.scoreboard.forEach((item) => {
                 const li = document.createElement('li');
+                const name = document.createElement('span');
+                name.classList.add('scoreboard__name');
+                name.innerHTML = '[' + item.name + ']';
+                const score = document.createElement('span');
+                score.classList.add('scoreboard__score');
+                score.innerHTML = item.score + "m";
+                li.appendChild(name);
+                li.appendChild(score);
                 ol.appendChild(li);
-                li.innerHTML += item.name + ": " + item.score + "m";
             });
             this.domHud.innerHTML = '';
             this.domHud.append(ol);

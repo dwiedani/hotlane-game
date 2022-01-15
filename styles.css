@@ -15,7 +15,7 @@ html, body {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 200px;
+  top: 10vh;
   margin: 1rem;
   padding: 1rem;
   border-radius: 15px;
@@ -36,7 +36,6 @@ html, body {
 }
 
 #ui-scoreboard.scoreboard {
-  font-style: italic;
   color: #fff;
   font-weight: 700;
   position: absolute;
@@ -50,13 +49,23 @@ html, body {
 }
 
 #ui-scoreboard__inner {
-  font-size: 27px;
+  font-size: 1rem;
   font-weight: 700;
   background-color: transparent;
   max-height: 200px;
   overflow-y: auto;
   padding-right: 1rem;
 }
+
+.scoreboard__name {
+  color:yellowgreen;
+  margin-right: 0.5rem;
+}
+
+.scoreboard__name::after {
+  content: ':';
+}
+
 
 dialog { 
   text-align: center;

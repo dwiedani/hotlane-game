@@ -50,6 +50,7 @@ declare namespace Script {
         score: number;
         hundreds: number;
         startTime: number;
+        private isGameOver;
         private constructor();
         static get(): GameState;
         gameOver(): void;
