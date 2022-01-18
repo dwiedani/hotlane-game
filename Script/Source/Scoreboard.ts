@@ -5,16 +5,22 @@ namespace Script {
         private static instance: Scoreboard;
         private scoreboard: any;
         private domHud;
+        private scoreboardHud;
 
         private constructor() {
             super();
             Scoreboard.instance = this;
-            this.domHud = document.querySelector("#ui-scoreboard__inner");
+            this.domHud = document.querySelector("#ui-scoreboard");
+            this.scoreboardHud = document.querySelector("#ui-scoreboard__inner");
         }
 
         public static get(): Scoreboard {
-            return Scoreboard.instance || new Scoreboard();
-          }
+          return Scoreboard.instance || new Scoreboard();
+        }
+
+        public focusScoreboard(toggle: boolean) {
+          toggle ? this.domHud.classList.add('focus') : this.domHud.classList.remove('focus');
+        }
 
         public generateUi(){
             const ol = document.createElement('ol');
@@ -30,8 +36,8 @@ namespace Script {
                 li.appendChild(score);
                 ol.appendChild(li);
             });
-            this.domHud.innerHTML = '';
-            this.domHud.append(ol);
+            this.scoreboardHud.innerHTML = '';
+            this.scoreboardHud.append(ol);
         }
 
         public async loadScoreboard(): Promise<any> {

@@ -45,6 +45,7 @@ declare namespace Script {
 declare namespace Script {
     import f = FudgeCore;
     class GameState extends f.Mutable {
+        private uiPanel;
         private static controller;
         private static instance;
         score: number;
@@ -52,6 +53,7 @@ declare namespace Script {
         startTime: number;
         private isGameOver;
         private constructor();
+        update(): void;
         static get(): GameState;
         gameOver(): void;
         toggleLoop(): void;
@@ -97,8 +99,10 @@ declare namespace Script {
         private static instance;
         private scoreboard;
         private domHud;
+        private scoreboardHud;
         private constructor();
         static get(): Scoreboard;
+        focusScoreboard(toggle: boolean): void;
         generateUi(): void;
         loadScoreboard(): Promise<any>;
         postScore(name: string, score: number): Promise<any>;

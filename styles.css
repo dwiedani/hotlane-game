@@ -7,7 +7,8 @@ html, body {
  background-color: black;
 }
 
-.ui-panel {
+#ui-scorepanel {
+  display: none;
   color: white;
   font-style: italic;
   font-size: 27px;
@@ -15,12 +16,11 @@ html, body {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 10vh;
-  margin: 1rem;
-  padding: 1rem;
-  border-radius: 15px;
+  top: 5vh;
   width: 150px;
-  background-color: rgba(0, 0, 0,0.5);
+}
+
+#ui-scorepanel.visible {
   display: flex;
 }
 
@@ -35,6 +35,11 @@ html, body {
   width: 100%;
 }
 
+.ui-scorepanel.animate .ui-score {
+  animation-name: pop;
+  animation-duration: 1s;
+}
+
 #ui-scoreboard.scoreboard {
   color: #fff;
   font-weight: 700;
@@ -46,6 +51,44 @@ html, body {
   background-color: rgba(0, 0, 0,0.5);
   text-align: left;
   padding: 0.5rem 1rem;
+  transition: 0.3s;
+  z-index: 100;
+}
+
+#ui-scoreboard.focus {
+  top: 50%;
+  right: 50%;
+  transform: translate(50%,-50%);
+}
+
+#ui-scoreboard .ui-scoreboard__form {
+  display: none;
+}
+
+#ui-scoreboard .ui-scoreboard__form input {
+  margin: 1rem 0.5rem;
+  padding: 0.5rem 1rem;
+}
+
+#ui-scoreboard .ui-scoreboard__form button {
+  color: white;
+  background-color: #002040;
+  border: 0;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+}
+#ui-scoreboard .ui-scoreboard__form button:hover {
+  background-color: #06354d;
+  cursor: pointer;
+}
+
+#ui-scoreboard.focus .ui-scoreboard__form {
+  display: block;
+}
+
+#ui-scoreboard.focus #ui-scoreboard__inner {
+  max-height: 50vh;
 }
 
 #ui-scoreboard__inner {
@@ -69,9 +112,17 @@ html, body {
 
 dialog { 
   text-align: center;
+  z-index: 0;
 }
 
 canvas.fullscreen { 
   width: 100vw; 
   height: 100vh;
+}
+
+@keyframes pop {
+  0%   {transform: scale(1);}
+  25%   {transform: scale(1.2);}
+  50%  {transform: scale(1.5);}
+  100% {transform: scale(1);}
 }

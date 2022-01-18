@@ -193,6 +193,7 @@ var Script;
     var f = FudgeCore;
     var fui = FudgeUserInterface;
     class GameState extends f.Mutable {
+        uiPanel;
         static controller;
         static instance;
         score;
@@ -202,13 +203,30 @@ var Script;
         constructor() {
             super();
             let domHud = document.querySelector("#ui");
+            this.uiPanel = document.querySelector("#ui-scorepanel");
             GameState.instance = this;
             GameState.controller = new fui.Controller(this, domHud);
-            console.log("Hud-Controller", GameState.controller);
             this.startTime = Date.now();
             this.hundreds = 0;
             this.score = 0;
             this.isGameOver = false;
+            document.getElementById('ui-scoreboard__form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                let name = e.target[0].value;
+                if (name !== null || name !== "") {
+                    Script.Scoreboard.get().postScore(name, this.score).then((newScoreboard) => {
+                        console.log(newScoreboard);
+                    });
+                }
+            });
+            f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
+        }
+        update() {
+            console.log("test");
+            if (this.score % 100 === 0) {
+                this.hudDom.classList.remove("animate");
+                this.hudDom.classList.add("animate");
+            }
         }
         static get() {
             return GameState.instance || new GameState();
@@ -216,22 +234,20 @@ var Script;
         gameOver() {
             this.isGameOver = true;
             this.pauseLoop();
-            let name = prompt("Game Over at: " + this.score + "m, Please enter your name", "anonymous");
-            if (name !== null || name !== "") {
-                Script.Scoreboard.get().postScore(name, this.score).then((newScoreboard) => {
-                    console.log(newScoreboard);
-                });
-            }
         }
         toggleLoop() {
             document.hidden ? GameState.get().pauseLoop() : GameState.get().startLoop();
         }
         startLoop() {
-            if (!this.isGameOver)
+            if (!this.isGameOver) {
+                this.uiPanel.classList.add("visible");
+                Script.Scoreboard.get().focusScoreboard(false);
                 f.Loop.start(f.LOOP_MODE.TIME_REAL, 60); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+            }
         }
         pauseLoop() {
             f.Loop.stop();
+            Script.Scoreboard.get().focusScoreboard(true);
         }
         reduceMutator(_mutator) { }
     }
@@ -443,13 +459,18 @@ var Script;
         static instance;
         scoreboard;
         domHud;
+        scoreboardHud;
         constructor() {
             super();
             Scoreboard.instance = this;
-            this.domHud = document.querySelector("#ui-scoreboard__inner");
+            this.domHud = document.querySelector("#ui-scoreboard");
+            this.scoreboardHud = document.querySelector("#ui-scoreboard__inner");
         }
         static get() {
             return Scoreboard.instance || new Scoreboard();
+        }
+        focusScoreboard(toggle) {
+            toggle ? this.domHud.classList.add('focus') : this.domHud.classList.remove('focus');
         }
         generateUi() {
             const ol = document.createElement('ol');
@@ -465,8 +486,8 @@ var Script;
                 li.appendChild(score);
                 ol.appendChild(li);
             });
-            this.domHud.innerHTML = '';
-            this.domHud.append(ol);
+            this.scoreboardHud.innerHTML = '';
+            this.scoreboardHud.append(ol);
         }
         async loadScoreboard() {
             return new Promise(resolve => {
