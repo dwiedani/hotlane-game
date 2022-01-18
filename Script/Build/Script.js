@@ -206,6 +206,7 @@ var Script;
             this.uiPanel = document.querySelector("#ui-scorepanel");
             GameState.instance = this;
             GameState.controller = new fui.Controller(this, domHud);
+            console.log(GameState.controller);
             this.startTime = Date.now();
             this.hundreds = 0;
             this.score = 0;
@@ -219,14 +220,12 @@ var Script;
                     });
                 }
             });
-            f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
         }
-        update() {
-            console.log("test");
-            if (this.score % 100 === 0) {
-                this.hudDom.classList.remove("animate");
-                this.hudDom.classList.add("animate");
-            }
+        animateScore() {
+            GameState.get().uiPanel.classList.add("animate");
+            setTimeout(() => {
+                GameState.get().uiPanel.classList.remove("animate");
+            }, 1000);
         }
         static get() {
             return GameState.instance || new GameState();
@@ -356,7 +355,6 @@ var Script;
             });
         }
         handleCollisionEnter(_event) {
-            console.log(_event);
             if (_event.cmpRigidbody.node.name === "Agent") {
                 Script.GameState.get().gameOver();
             }
@@ -429,7 +427,14 @@ var Script;
                     this.node.removeChild(obstacle);
                 });
                 Script.GameState.get().hundreds += this.roadLength;
-                console.log(Script.GameState.get().score);
+                if (Script.GameState.get().score >= 1000) {
+                    if (Math.floor(Script.GameState.get().hundreds) % 1000 === 0) {
+                        Script.GameState.get().animateScore();
+                    }
+                }
+                else {
+                    Script.GameState.get().animateScore();
+                }
                 this.spawnObstacle();
             }
         }

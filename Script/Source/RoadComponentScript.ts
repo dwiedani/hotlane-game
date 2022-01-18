@@ -76,7 +76,14 @@ namespace Script {
         });
              
         GameState.get().hundreds += this.roadLength;
-        console.log(GameState.get().score);
+        if(GameState.get().score >= 1000){
+          if(Math.floor(GameState.get().hundreds) % 1000 === 0) {
+            GameState.get().animateScore();
+          }
+        } else {
+          GameState.get().animateScore();
+        }
+        
         
         this.spawnObstacle();
       } 

@@ -1,4 +1,10 @@
+@font-face {
+  font-family: 'font';
+  src: url('./assets/font.ttf')  format('truetype');
+}
+
 html, body {
+  font-family: 'font';
   padding: 0px;
   margin: 0px;
   width: 100%;
@@ -11,13 +17,12 @@ html, body {
   display: none;
   color: white;
   font-style: italic;
-  font-size: 27px;
-  font-weight: 700;
+  font-size: 40px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
   top: 5vh;
-  width: 150px;
+  width: 200px;
 }
 
 #ui-scorepanel.visible {
@@ -26,13 +31,12 @@ html, body {
 
 .ui-score {
   font-size: 40px;
-  font-weight: 700;
   background-color: transparent;
   color: #fff;
   border: 0;
-  font-style: italic;
   text-align: right;
   width: 100%;
+  font-family: 'font';
 }
 
 .ui-scorepanel.animate .ui-score {
@@ -42,7 +46,6 @@ html, body {
 
 #ui-scoreboard.scoreboard {
   color: #fff;
-  font-weight: 700;
   position: absolute;
   right: 0;
   top: 0;
@@ -113,6 +116,12 @@ html, body {
 dialog { 
   text-align: center;
   z-index: 0;
+  width: 100%;
+}
+
+dialog h1 {
+  font-weight: 500;
+  font-size: 100px;
 }
 
 canvas.fullscreen { 
@@ -122,7 +131,7 @@ canvas.fullscreen {
 
 @keyframes pop {
   0%   {transform: scale(1);}
-  25%   {transform: scale(1.2);}
-  50%  {transform: scale(1.5);}
+  25%   {transform: scale(1);}
+  75%  {transform: scale(2);}
   100% {transform: scale(1);}
 }

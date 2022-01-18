@@ -17,12 +17,13 @@ namespace Script {
         this.uiPanel = document.querySelector("#ui-scorepanel");
         GameState.instance = this;
         GameState.controller = new fui.Controller(this, domHud);
+        console.log(GameState.controller);
         this.startTime = Date.now();
         this.hundreds = 0;
         this.score = 0;
         this.isGameOver = false;
 
-        document.getElementById('ui-scoreboard__form').addEventListener('submit', (e: Event) => {
+        document.getElementById('ui-scoreboard__form').addEventListener('submit', (e: any) => {
           e.preventDefault();
           let name: any = e.target[0].value;
           if (name !== null || name !== "") {
@@ -31,16 +32,13 @@ namespace Script {
             });
           }
         });
-
-        f.Loop.addEventListener(f.EVENT.LOOP_FRAME, this.update);
       }
 
-      public update(): void {
-        console.log("test");
-        if(this.score % 100 === 0) {
-          this.hudDom.classList.remove("animate");
-          this.hudDom.classList.add("animate");
-        }
+      public animateScore(): void{
+        GameState.get().uiPanel.classList.add("animate");
+        setTimeout(()=>{
+          GameState.get().uiPanel.classList.remove("animate");
+        },1000);
       }
   
       public static get(): GameState {

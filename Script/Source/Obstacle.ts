@@ -30,11 +30,10 @@ namespace Script {
 
             cmpTransform.mtxLocal.mutate({
                 translation: new f.Vector3(position, cmpMesh.mtxPivot.scaling.y/2, 0),
-            });
+            });            
         }
 
         public handleCollisionEnter(_event: f.EventPhysics): void {
-            console.log(_event);
             if(_event.cmpRigidbody.node.name === "Agent"){
                 GameState.get().gameOver();
             }

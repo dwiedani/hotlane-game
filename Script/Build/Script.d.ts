@@ -53,7 +53,7 @@ declare namespace Script {
         startTime: number;
         private isGameOver;
         private constructor();
-        update(): void;
+        animateScore(): void;
         static get(): GameState;
         gameOver(): void;
         toggleLoop(): void;
