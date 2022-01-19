@@ -56,12 +56,24 @@ html, body {
   padding: 0.5rem 1rem;
   transition: 0.3s;
   z-index: 100;
+  opacity: 0.5;
+}
+
+#ui-scoreboard.scoreboard:hover {
+  opacity: 1;
+}
+
+#ui-scoreboard.scoreboard p{
+  font-size: 27px;
+  padding: 0;
+  margin: 0;
 }
 
 #ui-scoreboard.focus {
   top: 50%;
   right: 50%;
   transform: translate(50%,-50%);
+  opacity: 1;
 }
 
 #ui-scoreboard .ui-scoreboard__form {
@@ -98,7 +110,7 @@ html, body {
   font-size: 1rem;
   font-weight: 700;
   background-color: transparent;
-  max-height: 200px;
+  max-height: 64px;
   overflow-y: auto;
   padding-right: 1rem;
 }
@@ -127,6 +139,10 @@ dialog h1 {
 canvas.fullscreen { 
   width: 100vw; 
   height: 100vh;
+}
+
+ol {
+  margin-top: 0;
 }
 
 @keyframes pop {

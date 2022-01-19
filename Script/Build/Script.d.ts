@@ -104,6 +104,7 @@ declare namespace Script {
         static get(): Scoreboard;
         focusScoreboard(toggle: boolean): void;
         generateUi(): void;
+        updateUi(): void;
         loadScoreboard(): Promise<any>;
         postScore(name: string, score: number): Promise<any>;
         protected reduceMutator(_mutator: f.Mutator): void;

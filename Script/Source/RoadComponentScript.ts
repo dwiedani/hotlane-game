@@ -84,6 +84,7 @@ namespace Script {
           GameState.get().animateScore();
         }
         
+        Scoreboard.get().updateUi();
         
         this.spawnObstacle();
       } 
