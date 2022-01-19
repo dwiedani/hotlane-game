@@ -25,19 +25,16 @@ namespace Script {
         public generateUi(): void {
             const ol = document.createElement('ol');
             this.scoreboard.forEach((item: any) => {
-                if(item.score > GameState.get().score) {
-                  const li = document.createElement('li');
-                  const name = document.createElement('span');
-                  name.classList.add('scoreboard__name');
-                  name.innerHTML = '[' + item.name + ']';
-                  const score = document.createElement('span');
-                  score.classList.add('scoreboard__score');
-                  score.innerHTML =  item.score + "m";
-                  li.appendChild(name);
-                  li.appendChild(score);
-                  ol.appendChild(li);
-                }
-                
+                const li = document.createElement('li');
+                const name = document.createElement('span');
+                name.classList.add('scoreboard__name');
+                name.innerHTML = '[' + item.name + ']';
+                const score = document.createElement('span');
+                score.classList.add('scoreboard__score');
+                score.innerHTML =  item.score + "m";
+                li.appendChild(name);
+                li.appendChild(score);
+                ol.appendChild(li);
             });
             this.scoreboardHud.innerHTML = '';
             this.scoreboardHud.append(ol);
@@ -46,10 +43,11 @@ namespace Script {
         public updateUi(): void {
           let scrollValue: number = 0;
           this.scoreboard.forEach((item: any) => {
-            if(item.score > GameState.get().score) {
+            if( item.score > GameState.get().score ) {
               scrollValue += 16;
             }
           });
+          scrollValue -= 16;
           this.scoreboardHud.scrollTop = scrollValue;
         }
 

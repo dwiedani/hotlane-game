@@ -47,9 +47,9 @@ html, body {
 #ui-scoreboard.scoreboard {
   color: #fff;
   position: absolute;
-  right: 0;
   top: 0;
-  margin: 1rem;
+  right: 50%;
+  transform: translate(50%,0);
   border-radius: 15px;
   background-color: rgba(0, 0, 0,0.5);
   text-align: left;
@@ -67,6 +67,11 @@ html, body {
   font-size: 27px;
   padding: 0;
   margin: 0;
+  display: none;
+}
+
+#ui-scoreboard.focus p{
+  display: inline-block;
 }
 
 #ui-scoreboard.focus {
@@ -110,7 +115,7 @@ html, body {
   font-size: 1rem;
   font-weight: 700;
   background-color: transparent;
-  max-height: 64px;
+  max-height: 16px;
   overflow-y: auto;
   padding-right: 1rem;
 }
@@ -142,6 +147,7 @@ canvas.fullscreen {
 }
 
 ol {
+  text-align: center;
   margin-top: 0;
 }
 
