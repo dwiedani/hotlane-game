@@ -65,11 +65,13 @@ namespace Script {
     scrCamera.rotation = new f.Vector3(5,180,0);
     cameraNode.addComponent(scrCamera);
     
+    graph.addComponent(new f.ComponentAudio(new f.Audio("./sound/theme.mp3"), true, true));
     graph.addChild(cameraNode);
 
     f.AudioManager.default.listenWith(cmpListener);
     f.AudioManager.default.listenTo(graph);
-    f.Debug.log("Audio:", f.AudioManager.default);    
+    f.AudioManager.default.volume = 100;
+    f.Debug.log("Audio:", f.AudioManager.default);
 
     // draw viewport once for immediate feedback
     viewport.draw();

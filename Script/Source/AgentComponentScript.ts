@@ -52,9 +52,12 @@ namespace Script {
       if(this.zPosition) {
         this.body.setPosition(new f.Vector3(this.node.mtxWorld.translation.x,this.node.mtxWorld.translation.y, this.zPosition));
       }
-  
     }
 
+    public crash = () => {
+      const sound:f.ComponentAudio = this.node.getChildrenByName("CrashSound")[0].getComponent(f.ComponentAudio);
+      sound.play(true);
+    }
 
     public destroy = () => {
       // TODO: add destroy logic here

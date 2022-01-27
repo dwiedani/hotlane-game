@@ -16,6 +16,7 @@ declare namespace Script {
         constructor();
         create: () => void;
         update: (_event: Event) => void;
+        crash: () => void;
         destroy: () => void;
         hndEvent: (_event: Event) => void;
     }
@@ -68,8 +69,9 @@ declare namespace Script {
     import f = FudgeCore;
     class Obstacle extends f.Node {
         private body;
+        private audio;
         constructor(name: string, position: number, width: number);
-        handleCollisionEnter(_event: f.EventPhysics): void;
+        handleCollisionEnter(): void;
     }
 }
 declare namespace Script {

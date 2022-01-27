@@ -30,6 +30,9 @@ namespace Script {
         this.addChild(body);
         this.addComponent(new f.ComponentRigidbody(100,f.BODY_TYPE.DYNAMIC, f.COLLIDER_TYPE.CUBE, f.COLLISION_GROUP.DEFAULT, transformComponent.mtxLocal));
         this.addComponent(new AgentComponentScript);
+        const crashSound = new f.Node("CrashSound");
+        crashSound.addComponent(new f.ComponentAudio(new f.Audio("./sound/gameover.mp3"), false, false));
+        this.addChild(crashSound);
 
         //let wheelTexture: f.TextureImage = new f.TextureImage();
         //wheelTexture.load("../assets/wheelTexture.png");

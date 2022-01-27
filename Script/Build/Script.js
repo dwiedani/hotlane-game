@@ -21,6 +21,9 @@ var Script;
             this.addChild(body);
             this.addComponent(new f.ComponentRigidbody(100, f.BODY_TYPE.DYNAMIC, f.COLLIDER_TYPE.CUBE, f.COLLISION_GROUP.DEFAULT, transformComponent.mtxLocal));
             this.addComponent(new Script.AgentComponentScript);
+            const crashSound = new f.Node("CrashSound");
+            crashSound.addComponent(new f.ComponentAudio(new f.Audio("./sound/gameover.mp3"), false, false));
+            this.addChild(crashSound);
             //let wheelTexture: f.TextureImage = new f.TextureImage();
             //wheelTexture.load("../assets/wheelTexture.png");
             //let wheelCoat: f.CoatTextured = new f.CoatTextured(new f.Color(255,255,255,255), wheelTexture);
@@ -81,6 +84,10 @@ var Script;
             if (this.zPosition) {
                 this.body.setPosition(new f.Vector3(this.node.mtxWorld.translation.x, this.node.mtxWorld.translation.y, this.zPosition));
             }
+        };
+        crash = () => {
+            const sound = this.node.getChildrenByName("CrashSound")[0].getComponent(f.ComponentAudio);
+            sound.play(true);
         };
         destroy = () => {
             // TODO: add destroy logic here
@@ -306,9 +313,11 @@ var Script;
         scrCamera.offset = new f.Vector3(0, 2, 12);
         scrCamera.rotation = new f.Vector3(5, 180, 0);
         cameraNode.addComponent(scrCamera);
+        graph.addComponent(new f.ComponentAudio(new f.Audio("./sound/theme.mp3"), true, true));
         graph.addChild(cameraNode);
         f.AudioManager.default.listenWith(cmpListener);
         f.AudioManager.default.listenTo(graph);
+        f.AudioManager.default.volume = 100;
         f.Debug.log("Audio:", f.AudioManager.default);
         // draw viewport once for immediate feedback
         viewport.draw();
@@ -333,6 +342,7 @@ var Script;
     var f = FudgeCore;
     class Obstacle extends f.Node {
         body;
+        audio;
         constructor(name, position, width) {
             super(name);
             const cmpTransform = new f.ComponentTransform;
@@ -354,10 +364,17 @@ var Script;
                 translation: new f.Vector3(position, cmpMesh.mtxPivot.scaling.y / 2, 0),
             });
         }
-        handleCollisionEnter(_event) {
-            if (_event.cmpRigidbody.node.name === "Agent") {
-                Script.GameState.get().gameOver();
-            }
+        handleCollisionEnter() {
+            this.collisions.forEach(element => {
+                const crashSound = element.node.getChildrenByName("CrashSound");
+                if (crashSound.length > 0) {
+                    console.log("play");
+                    crashSound[0].getComponent(f.ComponentAudio).play(true);
+                }
+                if (element.node.name === "Agent") {
+                    Script.GameState.get().gameOver();
+                }
+            });
         }
     }
     Script.Obstacle = Obstacle;

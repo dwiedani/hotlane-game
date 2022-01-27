@@ -3,7 +3,8 @@ namespace Script {
   
     export class Obstacle extends f.Node {
 
-        private body;
+        private body: f.ComponentRigidbody;
+        private audio: f.ComponentAudio;
 
         constructor(name: string, position: number, width: number) {
             super(name);
@@ -33,10 +34,17 @@ namespace Script {
             });            
         }
 
-        public handleCollisionEnter(_event: f.EventPhysics): void {
-            if(_event.cmpRigidbody.node.name === "Agent"){
-                GameState.get().gameOver();
-            }
+        public handleCollisionEnter(): void {
+            this.collisions.forEach(element => {
+                const crashSound = element.node.getChildrenByName("CrashSound");
+                if (crashSound.length > 0) {
+                    console.log("play");
+                    crashSound[0].getComponent(f.ComponentAudio).play(true);
+                }
+                if( element.node.name === "Agent"){
+                    GameState.get().gameOver();
+                }
+            });
         }
     }
 }
