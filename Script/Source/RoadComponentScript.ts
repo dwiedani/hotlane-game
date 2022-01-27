@@ -56,7 +56,7 @@ namespace Script {
     public spawnObstacle(): void{
       if(this.spawnTrigger){
         this.spawnTrigger = false;
-        let obstacleWidth: number = (Math.random() * (this.roadWidth/3 - this.obstacleWidthMin)) + this.obstacleWidthMin;
+        let obstacleWidth: number = (Math.random() * (this.roadWidth/4 - this.obstacleWidthMin)) + this.obstacleWidthMin;
         let obstaclePosition: number = (Math.random() * (this.roadWidth - obstacleWidth));
         this.node.addChild(new Obstacle("Obstacle", obstaclePosition,obstacleWidth));
         setTimeout(()=>{

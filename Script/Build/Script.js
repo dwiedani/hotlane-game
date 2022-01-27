@@ -427,7 +427,7 @@ var Script;
         spawnObstacle() {
             if (this.spawnTrigger) {
                 this.spawnTrigger = false;
-                let obstacleWidth = (Math.random() * (this.roadWidth / 3 - this.obstacleWidthMin)) + this.obstacleWidthMin;
+                let obstacleWidth = (Math.random() * (this.roadWidth / 4 - this.obstacleWidthMin)) + this.obstacleWidthMin;
                 let obstaclePosition = (Math.random() * (this.roadWidth - obstacleWidth));
                 this.node.addChild(new Script.Obstacle("Obstacle", obstaclePosition, obstacleWidth));
                 setTimeout(() => {
