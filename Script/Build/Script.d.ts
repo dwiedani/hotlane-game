@@ -105,6 +105,7 @@ declare namespace Script {
         private constructor();
         static get(): Scoreboard;
         focusScoreboard(toggle: boolean): void;
+        generateListItem(itemName: String, itemScore: number): HTMLElement;
         generateUi(): void;
         updateUi(): void;
         loadScoreboard(): Promise<any>;

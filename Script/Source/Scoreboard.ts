@@ -22,25 +22,37 @@ namespace Script {
           toggle ? this.domHud.classList.add('focus') : this.domHud.classList.remove('focus');
         }
 
+        public generateListItem(itemName: String, itemScore: number): HTMLElement {
+          const li = document.createElement('li');
+          const name = document.createElement('span');
+          name.classList.add('scoreboard__name');
+          name.innerHTML = '[' + itemName + ']';
+          const score = document.createElement('span');
+          score.classList.add('scoreboard__score');
+          score.innerHTML =  itemScore + "m";
+          li.appendChild(name);
+          li.appendChild(score);
+          return li;
+        }
+
         public generateUi(): void {
             const ol = document.createElement('ol');
+            let flag = false;
             this.scoreboard.forEach((item: any) => {
-                const li = document.createElement('li');
-                const name = document.createElement('span');
-                name.classList.add('scoreboard__name');
-                name.innerHTML = '[' + item.name + ']';
-                const score = document.createElement('span');
-                score.classList.add('scoreboard__score');
-                score.innerHTML =  item.score + "m";
-                li.appendChild(name);
-                li.appendChild(score);
-                ol.appendChild(li);
+              if( item.score < GameState.get().score && !flag) {
+                const playerScore = this.generateListItem("You", GameState.get().score);
+                playerScore.classList.add('scoreboard__player');
+                ol.appendChild(playerScore);
+                flag = true;
+              }
+              ol.appendChild(this.generateListItem(item.name,item.score));
             });
             this.scoreboardHud.innerHTML = '';
             this.scoreboardHud.append(ol);
         }
 
         public updateUi(): void {
+          this.generateUi();
           let scrollValue: number = 0;
           this.scoreboard.forEach((item: any) => {
             if( item.score > GameState.get().score ) {
@@ -65,6 +77,7 @@ namespace Script {
           }
     
         public async postScore(name: string, score: number): Promise<any> {
+          this.domHud.classList.add("submitted");
           return new Promise(resolve => {
             fetch('https://hotlane-scoreboard.herokuapp.com/score?TOKEN=' + '3t3tg34ff34fwsdfagh',{
               method: 'POST',

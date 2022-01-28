@@ -35,13 +35,13 @@ namespace Script {
         }
 
         public handleCollisionEnter(): void {
-            this.collisions.forEach(element => {
+            this.collisions.forEach((element: f.ComponentRigidbody) => {
                 const crashSound = element.node.getChildrenByName("CrashSound");
-                if (crashSound.length > 0) {
+                if ( crashSound.length > 0 ) {
                     console.log("play");
                     crashSound[0].getComponent(f.ComponentAudio).play(true);
                 }
-                if( element.node.name === "Agent"){
+                if( element.node.name === "Agent" ){
                     GameState.get().gameOver();
                 }
             });

@@ -240,6 +240,7 @@ var Script;
         gameOver() {
             this.isGameOver = true;
             this.pauseLoop();
+            Script.Scoreboard.get().generateUi();
         }
         toggleLoop() {
             document.hidden ? GameState.get().pauseLoop() : GameState.get().startLoop();
@@ -365,7 +366,7 @@ var Script;
             });
         }
         handleCollisionEnter() {
-            this.collisions.forEach(element => {
+            this.collisions.forEach((element) => {
                 const crashSound = element.node.getChildrenByName("CrashSound");
                 if (crashSound.length > 0) {
                     console.log("play");
@@ -495,24 +496,35 @@ var Script;
         focusScoreboard(toggle) {
             toggle ? this.domHud.classList.add('focus') : this.domHud.classList.remove('focus');
         }
+        generateListItem(itemName, itemScore) {
+            const li = document.createElement('li');
+            const name = document.createElement('span');
+            name.classList.add('scoreboard__name');
+            name.innerHTML = '[' + itemName + ']';
+            const score = document.createElement('span');
+            score.classList.add('scoreboard__score');
+            score.innerHTML = itemScore + "m";
+            li.appendChild(name);
+            li.appendChild(score);
+            return li;
+        }
         generateUi() {
             const ol = document.createElement('ol');
+            let flag = false;
             this.scoreboard.forEach((item) => {
-                const li = document.createElement('li');
-                const name = document.createElement('span');
-                name.classList.add('scoreboard__name');
-                name.innerHTML = '[' + item.name + ']';
-                const score = document.createElement('span');
-                score.classList.add('scoreboard__score');
-                score.innerHTML = item.score + "m";
-                li.appendChild(name);
-                li.appendChild(score);
-                ol.appendChild(li);
+                if (item.score < Script.GameState.get().score && !flag) {
+                    const playerScore = this.generateListItem("You", Script.GameState.get().score);
+                    playerScore.classList.add('scoreboard__player');
+                    ol.appendChild(playerScore);
+                    flag = true;
+                }
+                ol.appendChild(this.generateListItem(item.name, item.score));
             });
             this.scoreboardHud.innerHTML = '';
             this.scoreboardHud.append(ol);
         }
         updateUi() {
+            this.generateUi();
             let scrollValue = 0;
             this.scoreboard.forEach((item) => {
                 if (item.score > Script.GameState.get().score) {
@@ -535,6 +547,7 @@ var Script;
             });
         }
         async postScore(name, score) {
+            this.domHud.classList.add("submitted");
             return new Promise(resolve => {
                 fetch('https://hotlane-scoreboard.herokuapp.com/score?TOKEN=' + '3t3tg34ff34fwsdfagh', {
                     method: 'POST',

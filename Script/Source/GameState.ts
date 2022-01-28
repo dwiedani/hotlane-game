@@ -48,6 +48,7 @@ namespace Script {
       public gameOver() {
         this.isGameOver = true;
         this.pauseLoop();
+        Scoreboard.get().generateUi();
       }
 
       public toggleLoop(): void {
@@ -58,7 +59,7 @@ namespace Script {
         if(!this.isGameOver) {
           this.uiPanel.classList.add("visible");
           Scoreboard.get().focusScoreboard(false);
-          f.Loop.start(f.LOOP_MODE.TIME_REAL, 60);  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+          f.Loop.start(f.LOOP_MODE.TIME_REAL, 144);  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         }
       }
     
