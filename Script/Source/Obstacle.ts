@@ -4,7 +4,6 @@ namespace Script {
     export class Obstacle extends f.Node {
 
         private body: f.ComponentRigidbody;
-        private audio: f.ComponentAudio;
 
         constructor(name: string, position: number, width: number) {
             super(name);
@@ -25,26 +24,12 @@ namespace Script {
             
             this.body = new f.ComponentRigidbody(100,f.BODY_TYPE.KINEMATIC, f.COLLIDER_TYPE.CUBE, f.COLLISION_GROUP.DEFAULT, cmpTransform.mtxLocal);
             this.body.initialization = f.BODY_INIT.TO_MESH;
-            this.body.addEventListener(f.EVENT_PHYSICS.COLLISION_ENTER, this.handleCollisionEnter);
         
             this.addComponent(this.body);
 
             cmpTransform.mtxLocal.mutate({
                 translation: new f.Vector3(position, cmpMesh.mtxPivot.scaling.y/2, 0),
             });            
-        }
-
-        public handleCollisionEnter(): void {
-            this.collisions.forEach((element: f.ComponentRigidbody) => {
-                const crashSound = element.node.getChildrenByName("CrashSound");
-                if ( crashSound.length > 0 ) {
-                    console.log("play");
-                    crashSound[0].getComponent(f.ComponentAudio).play(true);
-                }
-                if( element.node.name === "Agent" ){
-                    GameState.get().gameOver();
-                }
-            });
         }
     }
 }

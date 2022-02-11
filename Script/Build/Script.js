@@ -21,9 +21,7 @@ var Script;
             this.addChild(body);
             this.addComponent(new f.ComponentRigidbody(100, f.BODY_TYPE.DYNAMIC, f.COLLIDER_TYPE.CUBE, f.COLLISION_GROUP.DEFAULT, transformComponent.mtxLocal));
             this.addComponent(new Script.AgentComponentScript);
-            const crashSound = new f.Node("CrashSound");
-            crashSound.addComponent(new f.ComponentAudio(new f.Audio("./sound/gameover.mp3"), false, false));
-            this.addChild(crashSound);
+            this.addChild(new Script.SFX("AgentCrashSFX", "./sound/gameover.mp3", "GameOverEvent"));
             //let wheelTexture: f.TextureImage = new f.TextureImage();
             //wheelTexture.load("../assets/wheelTexture.png");
             //let wheelCoat: f.CoatTextured = new f.CoatTextured(new f.Color(255,255,255,255), wheelTexture);
@@ -55,6 +53,7 @@ var Script;
         //private agentTransform: f.Matrix4x4;
         body;
         zPosition;
+        initialPosition;
         constructor() {
             super();
             this.control = new f.Control("Movement", 1, 0 /* PROPORTIONAL */);
@@ -69,6 +68,9 @@ var Script;
         create = () => {
             //this.agentTransform = this.node.getComponent(f.ComponentTransform).mtxLocal;
             this.body = this.node.getComponent(f.ComponentRigidbody);
+            this.body.addEventListener("ColliderEnteredCollision" /* COLLISION_ENTER */, this.handleCollisionEnter);
+            console.log("create");
+            this.initialPosition = new f.Vector3(this.node.mtxWorld.translation.x, this.node.mtxWorld.translation.y, this.node.mtxWorld.translation.z);
             setTimeout(() => {
                 this.zPosition = this.node.mtxWorld.translation.z;
             }, 1000);
@@ -85,13 +87,17 @@ var Script;
                 this.body.setPosition(new f.Vector3(this.node.mtxWorld.translation.x, this.node.mtxWorld.translation.y, this.zPosition));
             }
         };
-        crash = () => {
-            const sound = this.node.getChildrenByName("CrashSound")[0].getComponent(f.ComponentAudio);
-            sound.play(true);
-        };
         destroy = () => {
             // TODO: add destroy logic here
         };
+        handleCollisionEnter() {
+            this.collisions.forEach((element) => {
+                if (element.node.name === "Obstacle") {
+                    const gameOverEvent = new Event("GameOverEvent", { "bubbles": true, "cancelable": false });
+                    Script.graph.dispatchEvent(gameOverEvent);
+                }
+            });
+        }
         // Activate the functions of this component as response to events
         hndEvent = (_event) => {
             switch (_event.type) {
@@ -247,9 +253,19 @@ var Script;
         }
         startLoop() {
             if (!this.isGameOver) {
+                Script.graph.addEventListener("GameOverEvent", this.gameOver.bind(this));
+                document.addEventListener("RestartGameEvent", this.restart.bind(this));
                 this.uiPanel.classList.add("visible");
                 Script.Scoreboard.get().focusScoreboard(false);
                 f.Loop.start(f.LOOP_MODE.TIME_REAL, 60); // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+            }
+        }
+        restart() {
+            if (this.isGameOver) {
+                this.score = 0;
+                this.hundreds = 0;
+                this.isGameOver = false;
+                this.startLoop();
             }
         }
         pauseLoop() {
@@ -265,7 +281,6 @@ var Script;
     var f = FudgeCore;
     f.Debug.info("Main Program Template running!");
     let viewport;
-    let graph;
     let cameraNode;
     let agent;
     window.addEventListener("load", init);
@@ -288,8 +303,8 @@ var Script;
     async function setupCamera() {
         let _graphId = document.head.querySelector("meta[autoView]").getAttribute("autoView");
         await f.Project.loadResourcesFromHTML();
-        graph = f.Project.resources[_graphId];
-        if (!graph) {
+        Script.graph = f.Project.resources[_graphId];
+        if (!Script.graph) {
             alert("Nothing to render. Create a graph with at least a mesh, material and probably some light");
             return;
         }
@@ -299,9 +314,9 @@ var Script;
         cameraNode.addComponent(cmpCamera);
         let canvas = document.querySelector("canvas");
         viewport = new f.Viewport();
-        viewport.initialize("Viewport", graph, cmpCamera, canvas);
+        viewport.initialize("Viewport", Script.graph, cmpCamera, canvas);
         // get agent spawn point and create new agent
-        let agentSpawnNode = graph.getChildrenByName("Agents")[0];
+        let agentSpawnNode = Script.graph.getChildrenByName("Agents")[0];
         agent = new Script.Agent("Agent");
         agentSpawnNode.addChild(agent);
         // setup audio
@@ -314,11 +329,11 @@ var Script;
         scrCamera.offset = new f.Vector3(0, 2, 12);
         scrCamera.rotation = new f.Vector3(5, 180, 0);
         cameraNode.addComponent(scrCamera);
-        graph.addComponent(new f.ComponentAudio(new f.Audio("./sound/theme.mp3"), true, true));
-        graph.addChild(cameraNode);
+        cameraNode.addComponent(new f.ComponentAudio(new f.Audio("./sound/theme.mp3"), true, true));
+        Script.graph.addChild(cameraNode);
         f.AudioManager.default.listenWith(cmpListener);
-        f.AudioManager.default.listenTo(graph);
-        f.AudioManager.default.volume = 100;
+        f.AudioManager.default.listenTo(Script.graph);
+        f.AudioManager.default.volume = 1;
         f.Debug.log("Audio:", f.AudioManager.default);
         // draw viewport once for immediate feedback
         viewport.draw();
@@ -326,10 +341,15 @@ var Script;
     function start() {
         f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, update);
         document.addEventListener("visibilitychange", Script.GameState.get().toggleLoop, false);
+        document.getElementById("ui-restart").addEventListener("click", restartGame);
         Script.GameState.get().startLoop();
         Script.Scoreboard.get().loadScoreboard().then((data) => {
             console.log(data);
         });
+    }
+    function restartGame() {
+        const gameOverEvent = new Event("RestartGameEvent", { "bubbles": true, "cancelable": false });
+        document.dispatchEvent(gameOverEvent);
     }
     function update(_event) {
         f.Physics.world.simulate(); // if physics is included and used
@@ -343,7 +363,6 @@ var Script;
     var f = FudgeCore;
     class Obstacle extends f.Node {
         body;
-        audio;
         constructor(name, position, width) {
             super(name);
             const cmpTransform = new f.ComponentTransform;
@@ -359,22 +378,9 @@ var Script;
             this.addComponent(new f.ComponentMaterial(new f.Material("mtrObstacle", f.ShaderFlat, new f.CoatColored(new f.Color(0.5, 1, 0, 1)))));
             this.body = new f.ComponentRigidbody(100, f.BODY_TYPE.KINEMATIC, f.COLLIDER_TYPE.CUBE, f.COLLISION_GROUP.DEFAULT, cmpTransform.mtxLocal);
             this.body.initialization = f.BODY_INIT.TO_MESH;
-            this.body.addEventListener("ColliderEnteredCollision" /* COLLISION_ENTER */, this.handleCollisionEnter);
             this.addComponent(this.body);
             cmpTransform.mtxLocal.mutate({
                 translation: new f.Vector3(position, cmpMesh.mtxPivot.scaling.y / 2, 0),
-            });
-        }
-        handleCollisionEnter() {
-            this.collisions.forEach((element) => {
-                const crashSound = element.node.getChildrenByName("CrashSound");
-                if (crashSound.length > 0) {
-                    console.log("play");
-                    crashSound[0].getComponent(f.ComponentAudio).play(true);
-                }
-                if (element.node.name === "Agent") {
-                    Script.GameState.get().gameOver();
-                }
             });
         }
     }
@@ -390,10 +396,12 @@ var Script;
         // Properties may be mutated by users in the editor via the automatically created user interface
         message = "RoadComponentScript added to ";
         transform;
+        restartPosition;
         startPosition;
         roadWidth;
         roadLength;
-        speedInc = 50;
+        speedInc;
+        initialSpeedInc = 50;
         maxSpeed = 100;
         obstacleWidthMin = 2;
         spawnTrigger = true;
@@ -411,8 +419,11 @@ var Script;
             this.roadWidth = this.node.getComponent(f.ComponentMesh).mtxPivot.scaling.x;
             this.roadLength = this.node.getComponent(f.ComponentMesh).mtxPivot.scaling.z;
             this.transform = this.node.getComponent(f.ComponentTransform).mtxLocal;
+            this.restartPosition = this.transform.translation;
+            this.speedInc = this.initialSpeedInc;
             this.startPosition = new f.Vector3(this.transform.translation.x, this.transform.translation.y, -this.roadLength);
             this.maxSpeed = 125;
+            document.addEventListener('RestartGameEvent', this.restart.bind(this));
             f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
         };
         update = (_event) => {
@@ -430,6 +441,7 @@ var Script;
                 this.spawnTrigger = false;
                 let obstacleWidth = (Math.random() * (this.roadWidth / 4 - this.obstacleWidthMin)) + this.obstacleWidthMin;
                 let obstaclePosition = (Math.random() * (this.roadWidth - obstacleWidth));
+                console.log(this.speedInc);
                 this.node.addChild(new Script.Obstacle("Obstacle", obstaclePosition, obstacleWidth));
                 setTimeout(() => {
                     this.spawnTrigger = true;
@@ -441,9 +453,7 @@ var Script;
                 this.transform.mutate({
                     translation: this.startPosition,
                 });
-                this.node.getChildrenByName("Obstacle").forEach((obstacle) => {
-                    this.node.removeChild(obstacle);
-                });
+                this.clean();
                 Script.GameState.get().hundreds += this.roadLength;
                 if (Script.GameState.get().score >= 1000) {
                     if (Math.floor(Script.GameState.get().hundreds) % 1000 === 0) {
@@ -455,6 +465,21 @@ var Script;
                 }
                 Script.Scoreboard.get().updateUi();
                 this.spawnObstacle();
+            }
+        }
+        clean() {
+            this.node.getChildrenByName("Obstacle").forEach((obstacle) => {
+                obstacle.removeComponent(obstacle.getComponent(f.ComponentRigidbody));
+                this.node.removeChild(obstacle);
+            });
+        }
+        restart() {
+            if (Script.GameState.get().isGameOver) {
+                this.clean();
+                this.transform.mutate({
+                    translation: this.restartPosition,
+                });
+                this.speedInc = this.initialSpeedInc;
             }
         }
         // Activate the functions of this component as response to events
@@ -475,6 +500,24 @@ var Script;
         };
     }
     Script.RoadComponentScript = RoadComponentScript;
+})(Script || (Script = {}));
+var Script;
+(function (Script) {
+    var f = FudgeCore;
+    class SFX extends f.Node {
+        audio;
+        constructor(name, audioFileUri, eventTrigger) {
+            super(name);
+            this.audio = new f.ComponentAudio(new f.Audio(audioFileUri), false, false);
+            this.audio.volume = 25;
+            this.addComponent(this.audio);
+            Script.graph.addEventListener(eventTrigger, this.play.bind(this));
+        }
+        play(_event) {
+            this.audio.play(true);
+        }
+    }
+    Script.SFX = SFX;
 })(Script || (Script = {}));
 var Script;
 (function (Script) {

@@ -13,11 +13,12 @@ declare namespace Script {
         private control;
         private body;
         private zPosition;
+        private initialPosition;
         constructor();
         create: () => void;
         update: (_event: Event) => void;
-        crash: () => void;
         destroy: () => void;
+        handleCollisionEnter(): void;
         hndEvent: (_event: Event) => void;
     }
 }
@@ -52,26 +53,27 @@ declare namespace Script {
         score: number;
         hundreds: number;
         startTime: number;
-        private isGameOver;
+        isGameOver: boolean;
         private constructor();
         animateScore(): void;
         static get(): GameState;
         gameOver(): void;
         toggleLoop(): void;
         startLoop(): void;
+        restart(): void;
         pauseLoop(): void;
         protected reduceMutator(_mutator: f.Mutator): void;
     }
 }
 declare namespace Script {
+    import f = FudgeCore;
+    let graph: f.Graph;
 }
 declare namespace Script {
     import f = FudgeCore;
     class Obstacle extends f.Node {
         private body;
-        private audio;
         constructor(name: string, position: number, width: number);
-        handleCollisionEnter(): void;
     }
 }
 declare namespace Script {
@@ -80,10 +82,12 @@ declare namespace Script {
         static readonly iSubclass: number;
         message: string;
         private transform;
+        private restartPosition;
         private startPosition;
         private roadWidth;
         private roadLength;
         private speedInc;
+        private initialSpeedInc;
         private maxSpeed;
         private obstacleWidthMin;
         private spawnTrigger;
@@ -92,7 +96,17 @@ declare namespace Script {
         update: (_event: Event) => void;
         spawnObstacle(): void;
         reset(): void;
+        clean(): void;
+        restart(): void;
         hndEvent: (_event: Event) => void;
+    }
+}
+declare namespace Script {
+    import f = FudgeCore;
+    class SFX extends f.Node {
+        private audio;
+        constructor(name: string, audioFileUri: string, eventTrigger: string);
+        play(_event: Event): void;
     }
 }
 declare namespace Script {

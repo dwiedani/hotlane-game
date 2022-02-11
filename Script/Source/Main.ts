@@ -3,7 +3,7 @@ namespace Script {
   f.Debug.info("Main Program Template running!");
 
   let viewport: f.Viewport;
-  let graph: f.Node;
+  export let graph: f.Graph;
   let cameraNode: f.Node;
   let agent: f.Node;
   window.addEventListener("load", init);
@@ -11,22 +11,23 @@ namespace Script {
   // show dialog for startup
   let dialog: any;
 
-    function init(_event: Event) {
-      dialog = document.querySelector("dialog");
-      dialog.querySelector("h1").textContent = document.title;
-      dialog.addEventListener("click", function (_event: Event) {
-          // @ts-ignore until HTMLDialog is implemented by all browsers and available in dom.d.ts
-          dialog.close();
-          setupCamera().then(()=>{
-            start();
-          }); 
-      });
-      //@ts-ignore
-      dialog.showModal();
-      Scoreboard.get().loadScoreboard();
-    }
+  function init(_event: Event) {
+    dialog = document.querySelector("dialog");
+    dialog.querySelector("h1").textContent = document.title;
+    dialog.addEventListener("click", function (_event: Event) {
+        // @ts-ignore until HTMLDialog is implemented by all browsers and available in dom.d.ts
+        dialog.close();
+        setupCamera().then(()=>{
+          start();
+        }); 
+    });
+    //@ts-ignore
+    dialog.showModal();
+    Scoreboard.get().loadScoreboard();
+  }
 
   async function setupCamera() {
+
     let _graphId = document.head.querySelector("meta[autoView]").getAttribute("autoView");
 
     await f.Project.loadResourcesFromHTML();
@@ -65,12 +66,12 @@ namespace Script {
     scrCamera.rotation = new f.Vector3(5,180,0);
     cameraNode.addComponent(scrCamera);
     
-    graph.addComponent(new f.ComponentAudio(new f.Audio("./sound/theme.mp3"), true, true));
+    cameraNode.addComponent(new f.ComponentAudio(new f.Audio("./sound/theme.mp3"), true, true));
     graph.addChild(cameraNode);
 
     f.AudioManager.default.listenWith(cmpListener);
     f.AudioManager.default.listenTo(graph);
-    f.AudioManager.default.volume = 100;
+    f.AudioManager.default.volume = 1;
     f.Debug.log("Audio:", f.AudioManager.default);
 
     // draw viewport once for immediate feedback
@@ -80,10 +81,16 @@ namespace Script {
   function start(): void {
     f.Loop.addEventListener(f.EVENT.LOOP_FRAME, update);
     document.addEventListener("visibilitychange", GameState.get().toggleLoop, false );
+    document.getElementById("ui-restart").addEventListener("click", restartGame);
     GameState.get().startLoop();
     Scoreboard.get().loadScoreboard().then((data)=>{
       console.log(data);
     });
+  }
+
+  function restartGame(): void {
+    const gameOverEvent = new Event("RestartGameEvent", {"bubbles":true, "cancelable":false});
+    document.dispatchEvent(gameOverEvent);
   }
  
   function update(_event: Event): void {

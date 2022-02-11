@@ -9,10 +9,12 @@ namespace Script {
     public message: string = "RoadComponentScript added to ";
 
     private transform: f.Matrix4x4;
+    private restartPosition: f.Vector3;
     private startPosition: f.Vector3;
     private roadWidth: number;
     private roadLength: number;
-    private speedInc: number = 50;
+    private speedInc: number;
+    private initialSpeedInc: number = 50;
     private maxSpeed: number = 100;
     private obstacleWidthMin: number = 2;
     private spawnTrigger: boolean = true;
@@ -28,15 +30,18 @@ namespace Script {
       // Listen to this component being added to or removed from a node
       this.addEventListener(f.EVENT.COMPONENT_ADD, this.hndEvent);
       this.addEventListener(f.EVENT.COMPONENT_REMOVE, this.hndEvent);
-      this.addEventListener(f.EVENT.NODE_DESERIALIZED, this.hndEvent);
+      this.addEventListener(f.EVENT.NODE_DESERIALIZED, this.hndEvent);  
     }
 
     public create = (_event: Event): void => {
       this.roadWidth = this.node.getComponent(f.ComponentMesh).mtxPivot.scaling.x;
       this.roadLength = this.node.getComponent(f.ComponentMesh).mtxPivot.scaling.z;
       this.transform = this.node.getComponent(f.ComponentTransform).mtxLocal;
+      this.restartPosition = this.transform.translation;
+      this.speedInc = this.initialSpeedInc;
       this.startPosition = new f.Vector3(this.transform.translation.x,this.transform.translation.y,-this.roadLength);
       this.maxSpeed = 125;
+      document.addEventListener('RestartGameEvent', this.restart.bind(this));
       f.Loop.addEventListener(f.EVENT.LOOP_FRAME, this.update);
     }
 
@@ -58,7 +63,8 @@ namespace Script {
         this.spawnTrigger = false;
         let obstacleWidth: number = (Math.random() * (this.roadWidth/4 - this.obstacleWidthMin)) + this.obstacleWidthMin;
         let obstaclePosition: number = (Math.random() * (this.roadWidth - obstacleWidth));
-        this.node.addChild(new Obstacle("Obstacle", obstaclePosition,obstacleWidth));
+        console.log(this.speedInc);
+        this.node.addChild(new Obstacle("Obstacle", obstaclePosition , obstacleWidth));
         setTimeout(()=>{
           this.spawnTrigger = true;
         },1000);
@@ -66,14 +72,13 @@ namespace Script {
     }
 
     public reset(): void{
+     
       if(this.transform.translation.z >= this.roadLength){
         this.transform.mutate({
           translation: this.startPosition,
         });
 
-        this.node.getChildrenByName("Obstacle").forEach((obstacle)=>{
-          this.node.removeChild(obstacle);
-        });
+        this.clean();
              
         GameState.get().hundreds += this.roadLength;
         if(GameState.get().score >= 1000){
@@ -88,6 +93,25 @@ namespace Script {
         
         this.spawnObstacle();
       } 
+    }
+
+    public clean(): void {
+      this.node.getChildrenByName("Obstacle").forEach((obstacle)=>{
+        obstacle.removeComponent(obstacle.getComponent(f.ComponentRigidbody));
+        this.node.removeChild(obstacle);
+      });    
+    }
+
+    public restart(): void {
+      if(GameState.get().isGameOver) {
+        this.clean(); 
+        this.transform.mutate({
+          translation: this.restartPosition,
+        });
+
+        this.speedInc = this.initialSpeedInc;
+        
+      }      
     }
 
     // Activate the functions of this component as response to events

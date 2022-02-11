@@ -9,7 +9,7 @@ namespace Script {
       public score: number;
       public hundreds: number;
       public startTime: number;
-      private isGameOver: boolean;
+      public isGameOver: boolean;
       
       private constructor() {
         super();
@@ -57,10 +57,21 @@ namespace Script {
     
       public startLoop(): void {
         if(!this.isGameOver) {
+          graph.addEventListener("GameOverEvent", this.gameOver.bind(this));
+          document.addEventListener("RestartGameEvent", this.restart.bind(this));
           this.uiPanel.classList.add("visible");
           Scoreboard.get().focusScoreboard(false);
-          f.Loop.start(f.LOOP_MODE.TIME_REAL, 144);  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
+          f.Loop.start(f.LOOP_MODE.TIME_REAL, 60);  // start the game loop to continously draw the viewport, update the audiosystem and drive the physics i/a
         }
+      }
+
+      public restart(): void {
+        if(this.isGameOver) {
+          this.score = 0;
+          this.hundreds = 0;
+          this.isGameOver = false;
+          this.startLoop();
+        } 
       }
     
       public pauseLoop(): void  {

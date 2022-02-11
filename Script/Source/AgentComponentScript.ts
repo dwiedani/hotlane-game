@@ -12,11 +12,12 @@ namespace Script {
     //private agentTransform: f.Matrix4x4;
     private body: f.ComponentRigidbody; 
     private zPosition: number;
+    private initialPosition: f.Vector3;
 
     constructor() {
       super();
       this.control = new f.Control("Movement", 1, f.CONTROL_TYPE.PROPORTIONAL);
-      this.control.setDelay(1);      
+      this.control.setDelay(1);
 
       // Don't start when running in editor
       if (f.Project.mode == f.MODE.EDITOR)
@@ -31,6 +32,10 @@ namespace Script {
     public create = () => {
       //this.agentTransform = this.node.getComponent(f.ComponentTransform).mtxLocal;
       this.body = this.node.getComponent(f.ComponentRigidbody);
+      this.body.addEventListener(f.EVENT_PHYSICS.COLLISION_ENTER, this.handleCollisionEnter);
+      console.log("create");
+      
+      this.initialPosition = new f.Vector3(this.node.mtxWorld.translation.x,this.node.mtxWorld.translation.y,this.node.mtxWorld.translation.z);
     
       setTimeout(()=>{
         this.zPosition = this.node.mtxWorld.translation.z;
@@ -38,7 +43,6 @@ namespace Script {
       
       f.Loop.addEventListener(f.EVENT.LOOP_FRAME, this.update);
     }
-
 
     public update = (_event: Event) => {
       let moveValue: number = f.Keyboard.mapToTrit([f.KEYBOARD_CODE.ARROW_RIGHT, f.KEYBOARD_CODE.D], [f.KEYBOARD_CODE.ARROW_LEFT, f.KEYBOARD_CODE.A]);
@@ -54,14 +58,18 @@ namespace Script {
       }
     }
 
-    public crash = () => {
-      const sound:f.ComponentAudio = this.node.getChildrenByName("CrashSound")[0].getComponent(f.ComponentAudio);
-      sound.play(true);
-    }
-
     public destroy = () => {
       // TODO: add destroy logic here
     }
+
+    public handleCollisionEnter(): void {
+      this.collisions.forEach((element: f.ComponentRigidbody) => {
+          if( element.node.name === "Obstacle" ){
+              const gameOverEvent = new Event("GameOverEvent", {"bubbles":true, "cancelable":false});
+              graph.dispatchEvent(gameOverEvent);
+          }
+      });
+  }
 
     // Activate the functions of this component as response to events
     public hndEvent = (_event: Event) => {

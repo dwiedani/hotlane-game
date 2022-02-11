@@ -85,6 +85,14 @@ html, body {
   opacity: 1;
 }
 
+#ui-scoreboard #ui-restart {
+  display: none;
+}
+
+#ui-scoreboard.focus #ui-restart {
+  display: block;
+}
+
 #ui-scoreboard .ui-scoreboard__form {
   display: none;
 }
@@ -94,7 +102,7 @@ html, body {
   padding: 0.5rem 1rem;
 }
 
-#ui-scoreboard .ui-scoreboard__form button {
+button {
   color: white;
   background-color: #002040;
   border: 0;
@@ -102,7 +110,8 @@ html, body {
   border-radius: 8px;
   font-weight: 700;
 }
-#ui-scoreboard .ui-scoreboard__form button:hover {
+
+button:hover {
   background-color: #06354d;
   cursor: pointer;
 }
