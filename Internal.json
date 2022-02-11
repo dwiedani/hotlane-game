@@ -150,7 +150,7 @@
       "shader": "ShaderFlat",
       "coat": {
         "ƒ.CoatColored": {
-          "color": "[1, 1, 1, 1]"
+          "color": "[0.5, 0.5, 0.5, 1]"
         }
       }
     }
@@ -255,7 +255,7 @@
                   "ƒ.ComponentLight": {
                     "pivot": {
                       "translation": "[0, 0, 0]",
-                      "rotation": "[30, 0, 0]",
+                      "rotation": "[160, 0, 0]",
                       "scaling": "[1, 1, 1]"
                     },
                     "light": {
@@ -328,6 +328,7 @@
                           "startPosition": "undefined",
                           "roadLength": "undefined",
                           "speedInc": 40,
+                          "initialSpeedInc": 50,
                           "maxSpeed": 120,
                           "obstacleWidthMin": 2,
                           "spawnTrigger": true
@@ -619,6 +620,7 @@
                           "startPosition": "undefined",
                           "roadLength": "undefined",
                           "speedInc": 40,
+                          "initialSpeedInc": 50,
                           "maxSpeed": 120,
                           "obstacleWidthMin": 2,
                           "spawnTrigger": true
