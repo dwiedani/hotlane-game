@@ -364,7 +364,7 @@ var Script;
         constructor(name, position, width) {
             super(name);
             let obstacleTexture = new f.TextureImage();
-            obstacleTexture.load("../assets/obstacleTexture.png");
+            obstacleTexture.load("./assets/obstacleTexture.png");
             let coat = new f.CoatTextured(new f.Color(255, 255, 255, 255), obstacleTexture);
             const cmpTransform = new f.ComponentTransform;
             this.addComponent(cmpTransform);

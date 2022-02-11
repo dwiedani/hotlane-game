@@ -9,7 +9,7 @@ namespace Script {
             super(name);
             
             let obstacleTexture: f.TextureImage = new f.TextureImage();
-            obstacleTexture.load("../assets/obstacleTexture.png");
+            obstacleTexture.load("./assets/obstacleTexture.png");
             let coat: f.CoatTextured = new f.CoatTextured(new f.Color(255,255,255,255), obstacleTexture);
 
             const cmpTransform = new f.ComponentTransform;
