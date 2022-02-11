@@ -91,6 +91,7 @@ html, body {
 
 #ui-scoreboard.focus #ui-restart {
   display: block;
+  width: 100%;
 }
 
 #ui-scoreboard .ui-scoreboard__form {
