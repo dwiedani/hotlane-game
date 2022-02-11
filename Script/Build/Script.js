@@ -365,6 +365,9 @@ var Script;
         body;
         constructor(name, position, width) {
             super(name);
+            let obstacleTexture = new f.TextureImage();
+            obstacleTexture.load("../assets/obstacleTexture.png");
+            let coat = new f.CoatTextured(new f.Color(255, 255, 255, 255), obstacleTexture);
             const cmpTransform = new f.ComponentTransform;
             this.addComponent(cmpTransform);
             const cmpMesh = new f.ComponentMesh(new f.MeshCube("ObstacleMesh"));
@@ -375,7 +378,7 @@ var Script;
                 scaling: new f.Vector3(width, 1, 0.25),
             });
             this.addComponent(cmpMesh);
-            this.addComponent(new f.ComponentMaterial(new f.Material("mtrObstacle", f.ShaderFlat, new f.CoatColored(new f.Color(0.5, 1, 0, 1)))));
+            this.addComponent(new f.ComponentMaterial(new f.Material("mtrObstacle", f.ShaderTextureFlat, coat)));
             this.body = new f.ComponentRigidbody(100, f.BODY_TYPE.KINEMATIC, f.COLLIDER_TYPE.CUBE, f.COLLISION_GROUP.DEFAULT, cmpTransform.mtxLocal);
             this.body.initialization = f.BODY_INIT.TO_MESH;
             this.addComponent(this.body);
