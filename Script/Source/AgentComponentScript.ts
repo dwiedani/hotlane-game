@@ -12,7 +12,7 @@ namespace Script {
     //private agentTransform: f.Matrix4x4;
     private body: f.ComponentRigidbody; 
     private zPosition: number;
-    private initialPosition: f.Vector3;
+    private collisions: any;
 
     constructor() {
       super();
@@ -33,9 +33,6 @@ namespace Script {
       //this.agentTransform = this.node.getComponent(f.ComponentTransform).mtxLocal;
       this.body = this.node.getComponent(f.ComponentRigidbody);
       this.body.addEventListener(f.EVENT_PHYSICS.COLLISION_ENTER, this.handleCollisionEnter);
-      console.log("create");
-      
-      this.initialPosition = new f.Vector3(this.node.mtxWorld.translation.x,this.node.mtxWorld.translation.y,this.node.mtxWorld.translation.z);
     
       setTimeout(()=>{
         this.zPosition = this.node.mtxWorld.translation.z;

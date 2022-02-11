@@ -53,7 +53,7 @@ var Script;
         //private agentTransform: f.Matrix4x4;
         body;
         zPosition;
-        initialPosition;
+        collisions;
         constructor() {
             super();
             this.control = new f.Control("Movement", 1, 0 /* PROPORTIONAL */);
@@ -69,8 +69,6 @@ var Script;
             //this.agentTransform = this.node.getComponent(f.ComponentTransform).mtxLocal;
             this.body = this.node.getComponent(f.ComponentRigidbody);
             this.body.addEventListener("ColliderEnteredCollision" /* COLLISION_ENTER */, this.handleCollisionEnter);
-            console.log("create");
-            this.initialPosition = new f.Vector3(this.node.mtxWorld.translation.x, this.node.mtxWorld.translation.y, this.node.mtxWorld.translation.z);
             setTimeout(() => {
                 this.zPosition = this.node.mtxWorld.translation.z;
             }, 1000);

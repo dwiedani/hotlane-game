@@ -13,7 +13,7 @@ declare namespace Script {
         private control;
         private body;
         private zPosition;
-        private initialPosition;
+        private collisions;
         constructor();
         create: () => void;
         update: (_event: Event) => void;
