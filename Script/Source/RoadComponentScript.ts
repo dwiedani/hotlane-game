@@ -63,11 +63,12 @@ namespace Script {
         this.spawnTrigger = false;
         let obstacleWidth: number = (Math.random() * (this.roadWidth/4 - this.obstacleWidthMin)) + this.obstacleWidthMin;
         let obstaclePosition: number = (Math.random() * (this.roadWidth - obstacleWidth));
-        console.log(this.speedInc);
         this.node.addChild(new Obstacle("Obstacle", obstaclePosition , obstacleWidth));
-        setTimeout(()=>{
+
+        let timer: f.Timer = new f.Timer(f.Time.game, 100, 1, (_event: f.EventTimer) => {
           this.spawnTrigger = true;
-        },1000);
+        });
+        console.log(timer);
       }
     }
 

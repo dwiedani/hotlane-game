@@ -28,7 +28,7 @@ namespace Script {
         });
 
         this.addChild(body);
-        this.addComponent(new f.ComponentRigidbody(100,f.BODY_TYPE.DYNAMIC, f.COLLIDER_TYPE.CUBE, f.COLLISION_GROUP.DEFAULT, transformComponent.mtxLocal));
+        this.addComponent(new f.ComponentRigidbody(1,f.BODY_TYPE.DYNAMIC, f.COLLIDER_TYPE.CUBE, f.COLLISION_GROUP.DEFAULT, transformComponent.mtxLocal));
         this.addComponent(new AgentComponentScript);
 
         this.addChild(new SFX("AgentCrashSFX", "./sound/gameover.mp3", "GameOverEvent"));

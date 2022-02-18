@@ -97,6 +97,5 @@ namespace Script {
     f.Physics.world.simulate();  // if physics is included and used
     viewport.draw();
     f.AudioManager.default.update();
-    //GameState.get().score = Math.floor((Date.now() - GameState.get().startTime) / 100);
   }
 }

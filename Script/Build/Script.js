@@ -19,7 +19,7 @@ var Script;
                 scaling: f.Vector3.SCALE(body.mtxLocal.scaling, 2)
             });
             this.addChild(body);
-            this.addComponent(new f.ComponentRigidbody(100, f.BODY_TYPE.DYNAMIC, f.COLLIDER_TYPE.CUBE, f.COLLISION_GROUP.DEFAULT, transformComponent.mtxLocal));
+            this.addComponent(new f.ComponentRigidbody(1, f.BODY_TYPE.DYNAMIC, f.COLLIDER_TYPE.CUBE, f.COLLISION_GROUP.DEFAULT, transformComponent.mtxLocal));
             this.addComponent(new Script.AgentComponentScript);
             this.addChild(new Script.SFX("AgentCrashSFX", "./sound/gameover.mp3", "GameOverEvent"));
             //let wheelTexture: f.TextureImage = new f.TextureImage();
@@ -48,7 +48,7 @@ var Script;
         static iSubclass = f.Component.registerSubclass(AgentComponentScript);
         // Properties may be mutated by users in the editor via the automatically created user interface
         canMove = true;
-        speed = 5000.0;
+        speed = 50.0;
         control;
         //private agentTransform: f.Matrix4x4;
         body;
@@ -69,9 +69,10 @@ var Script;
             //this.agentTransform = this.node.getComponent(f.ComponentTransform).mtxLocal;
             this.body = this.node.getComponent(f.ComponentRigidbody);
             this.body.addEventListener("ColliderEnteredCollision" /* COLLISION_ENTER */, this.handleCollisionEnter);
-            setTimeout(() => {
+            let timer = new f.Timer(f.Time.game, 100, 1, (_event) => {
                 this.zPosition = this.node.mtxWorld.translation.z;
-            }, 1000);
+            });
+            console.log(timer);
             f.Loop.addEventListener("loopFrame" /* LOOP_FRAME */, this.update);
         };
         update = (_event) => {
@@ -353,7 +354,6 @@ var Script;
         f.Physics.world.simulate(); // if physics is included and used
         viewport.draw();
         f.AudioManager.default.update();
-        //GameState.get().score = Math.floor((Date.now() - GameState.get().startTime) / 100);
     }
 })(Script || (Script = {}));
 var Script;
@@ -442,11 +442,11 @@ var Script;
                 this.spawnTrigger = false;
                 let obstacleWidth = (Math.random() * (this.roadWidth / 4 - this.obstacleWidthMin)) + this.obstacleWidthMin;
                 let obstaclePosition = (Math.random() * (this.roadWidth - obstacleWidth));
-                console.log(this.speedInc);
                 this.node.addChild(new Script.Obstacle("Obstacle", obstaclePosition, obstacleWidth));
-                setTimeout(() => {
+                let timer = new f.Timer(f.Time.game, 100, 1, (_event) => {
                     this.spawnTrigger = true;
-                }, 1000);
+                });
+                console.log(timer);
             }
         }
         reset() {

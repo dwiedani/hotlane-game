@@ -7,7 +7,7 @@ namespace Script {
     public static readonly iSubclass: number = f.Component.registerSubclass(AgentComponentScript);
     // Properties may be mutated by users in the editor via the automatically created user interface
     private canMove: boolean = true;
-    private speed: number = 5000.0;
+    private speed: number = 50.0;
     private control: f.Control;
     //private agentTransform: f.Matrix4x4;
     private body: f.ComponentRigidbody; 
@@ -33,10 +33,12 @@ namespace Script {
       //this.agentTransform = this.node.getComponent(f.ComponentTransform).mtxLocal;
       this.body = this.node.getComponent(f.ComponentRigidbody);
       this.body.addEventListener(f.EVENT_PHYSICS.COLLISION_ENTER, this.handleCollisionEnter);
-    
-      setTimeout(()=>{
+  
+      let timer: f.Timer = new f.Timer(f.Time.game, 100, 1, (_event: f.EventTimer) => {
         this.zPosition = this.node.mtxWorld.translation.z;
-      },1000);
+      });
+
+      console.log(timer);
       
       f.Loop.addEventListener(f.EVENT.LOOP_FRAME, this.update);
     }
