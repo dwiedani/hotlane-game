@@ -18,10 +18,13 @@ namespace Script {
         GameState.instance = this;
         GameState.controller = new fui.Controller(this, domHud);
         console.log(GameState.controller);
-        this.startTime = Date.now();
-        this.hundreds = 0;
-        this.score = 0;
-        this.isGameOver = false;
+
+        this.mutate({
+          score: 0,
+          hundreds: 0,
+          isGameOver: 0,
+          startTime: Date.now()
+        });
 
         document.getElementById('ui-scoreboard__form').addEventListener('submit', (e: any) => {
           e.preventDefault();
@@ -67,9 +70,11 @@ namespace Script {
 
       public restart(): void {
         if(this.isGameOver) {
-          this.score = 0;
-          this.hundreds = 0;
-          this.isGameOver = false;
+          this.mutate({
+            score: 0,
+            hundreds: 0,
+            isGameOver: 0
+          });
           this.startLoop();
         } 
       }
