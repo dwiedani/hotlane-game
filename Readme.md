@@ -7,9 +7,9 @@ MIB 7
 Course: PRIMA
 Docent: Prof. Dipl.-Ing. Jirka R. Dell'Oro-Friedl, HFU
 
-[live](https://dwiedani.github.io/hotlane-game/){:target="_blank"} \
-[source code](https://github.com/dwiedani/hotlane-game){:target="_blank"} \
-[design](https://github.com/dwiedani/hotlane-game/design){:target="_blank"} 
+[live](https://dwiedani.github.io/hotlane-game/) \
+[source code](https://github.com/dwiedani/hotlane-game) \
+[design](https://github.com/dwiedani/hotlane-game/design) 
 
 ## Description
 Drive on the highway while the sounds of synthwave accompany you. The road seems to be infinite, but don't become inattentive, you will encounter obstacles. How far can you go? Show your skills and place your milage on the public scoreboard!
