@@ -5,7 +5,7 @@ WS 2021/2022
 MIB 7
 
 Course: PRIMA
-Docent: Prof. Jirka Dell´Oro-Friedl
+Docent: Prof. Dipl.-Ing. Jirka R. Dell'Oro-Friedl, HFU
 
 [live](https://dwiedani.github.io/hotlane-game/)
 [source code](https://github.com/dwiedani/hotlane-game)
@@ -18,7 +18,6 @@ Drive on the highway while the sounds of synthwave accompany you. The road seems
 **Movement:** A,D / Arrow-keys
 
 ## Checklist for the final assignment
-© Prof. Dipl.-Ing. Jirka R. Dell'Oro-Friedl, HFU
 | Nr | Criterion       | Explanation                                                                                                              |
 |---:|-------------------|---------------------------------------------------------------------------------------------------------------------|
 |  0 | Units and Positions | The world coordinates origin (the 0) is located on the upper left courner of the visible road. this provides allways positive car positioning aswell as drivable area within a positive range. Like this also the roads benefit from a positive moving direction. The road pivot is also placed on the upper left corner so no random negative numbers have to be considered for the obstacle placement.|
