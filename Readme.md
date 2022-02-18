@@ -9,7 +9,7 @@ Docent: Prof. Dipl.-Ing. Jirka R. Dell'Oro-Friedl, HFU
 
 [live](https://dwiedani.github.io/hotlane-game/) \
 [source code](https://github.com/dwiedani/hotlane-game) \
-[design](https://github.com/dwiedani/hotlane-game/design) 
+[design](https://github.com/dwiedani/hotlane-game/design.pdf) 
 
 ## Description
 Drive on the highway while the sounds of synthwave accompany you. The road seems to be infinite, but don't become inattentive, you will encounter obstacles. How far can you go? Show your skills and place your milage on the public scoreboard!
@@ -20,7 +20,7 @@ Drive on the highway while the sounds of synthwave accompany you. The road seems
 ## Checklist for the final assignment
 | Nr | Criterion       | Explanation                                                                                                              |
 |---:|-------------------|---------------------------------------------------------------------------------------------------------------------|
-|  0 | Units and Positions | The world coordinates origin (the 0) is located on the upper left courner of the visible road. this provides allways positive car positioning aswell as drivable area within a positive range. Like this also the roads benefit from a positive moving direction. The road pivot is also placed on the upper left corner so no random negative numbers have to be considered for the obstacle placement.|
+|  0 | Units and Positions | The world coordinates origin is located on the upper left courner of the visible road. this provides allways positive car positioning aswell as drivable area within a positive range. Like this also the roads benefit from a positive moving direction. The road pivot is also placed on the upper left corner so no random negative numbers have to be considered for the obstacle placement. The scale 1 equals 1m. The road is 50mx100m. Obstacles can be 2 to (roadWidth/4) m. |
 |  1 | Hierarchy         | Most interesting is the road setup. The road itself (rigid) is not moving and containes two moving (non rigid) road subnodes where the obstacles are placed so the obstacles will allways move with the road subnodes speed it was placed on.|
 |  2 | Editor            | The Editor was used for the base scene setup which containes the road with all its parts and the horrizon which includes multiple tile nodes. This makes scence because this depends highly on the visual apearance and has to be adjusted from the get go. The obstacle creation is handled by code because it is generated randomly. Aswell as the Agent creation so a respawn mechanism or a multiplayer functionality can be considered in the future.|
 |  3 | Scriptcomponents  | First of all the roads (moving parts) have a scriptcomponent so the initial and maxspeed can also be adjusted in the editor. When adjusting other parameters of the road like the size of the mesh for example, the speeds can be updated easily without changing something in the sourcecode. Also Agent and Camera have ComponentScripts.|
