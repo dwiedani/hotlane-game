@@ -1,12 +1,5 @@
 # Hotlane
 
-Daniel Schlegel
-WS 2021/2022
-MIB 7
-
-Course: PRIMA
-Docent: Prof. Dipl.-Ing. Jirka R. Dell'Oro-Friedl, HFU
-
 [live](https://dwiedani.github.io/hotlane-game/) \
 [source code](https://github.com/dwiedani/hotlane-game) \
 [design](https://github.com/dwiedani/hotlane-game/design.pdf) 
